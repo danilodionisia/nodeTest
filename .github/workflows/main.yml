@@ -1,14 +1,11 @@
 # https://github.com/aws-actions/configure-aws-credentials
 name: "publish: upload artifact to aws s3"
 on:
-  pull_request:
-    branches: main
   push:
     branches: main
 jobs:
   setup:
-    runs-on: [code-linux, code-default]
-    timeout-minutes: 30
+    runs-on: ubuntu-latest
     # These permissions are needed to interact with GitHub's OIDC Token endpoint.
     permissions:
       id-token: write
@@ -25,7 +22,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_DEV_GITHUB_ACTION_ROLE }}
-          aws-region: us-west-2
+          aws-region: us-east-1
       - name: Copy files to the test website with the AWS CLI
         run: |
           ls -lrt ${{steps.download-artifact.outputs.download-path}}
