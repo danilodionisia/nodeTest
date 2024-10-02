@@ -1,5 +1,10 @@
   # https://github.com/aws-actions/configure-aws-credentials
   publish:
+    on:
+      pull_request:
+        branches: main
+      push:
+        branches: main
     name: "publish: upload artifact to aws s3"
     needs: test
     runs-on: ubuntu-latest
