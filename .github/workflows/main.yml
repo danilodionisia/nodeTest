@@ -11,6 +11,9 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Print secrets
+        run: |
+          echo ${{ secrets.AWS_DEV_GITHUB_ACTION_ROLE }}
       # - name: Download a single artifact
       #   # https://github.com/actions/download-artifact
       #   uses: actions/download-artifact@v3
@@ -23,9 +26,6 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_DEV_GITHUB_ACTION_ROLE }}
           aws-region: us-east-1
-      - name: Print secrets
-        run: |
-          echo ${{ secrets.AWS_DEV_GITHUB_ACTION_ROLE }}
       # - name: Copy files to the test website with the AWS CLI
       #   run: |
       #     ls -lrt ${{steps.download-artifact.outputs.download-path}}
