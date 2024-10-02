@@ -17,14 +17,15 @@ jobs:
       #   id: download-artifact
       #   with:
       #     name: apache-spark-framework-artifact
-      #     path: build/libs
+      #     path: build/libs      
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v4        
         with:
-          run: |
-            echo "secrets -> ${{ secrets.AWS_DEV_GITHUB_ACTION_ROLE }}"
           role-to-assume: ${{ secrets.AWS_DEV_GITHUB_ACTION_ROLE }}
           aws-region: us-east-1
+      - name: Print secrets
+        run: |
+          echo ${{ secrets.AWS_DEV_GITHUB_ACTION_ROLE }}
       # - name: Copy files to the test website with the AWS CLI
       #   run: |
       #     ls -lrt ${{steps.download-artifact.outputs.download-path}}
