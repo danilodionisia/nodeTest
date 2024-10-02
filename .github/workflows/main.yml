@@ -1,0 +1,28 @@
+  # https://github.com/aws-actions/configure-aws-credentials
+  publish:
+    name: "publish: upload artifact to aws s3"
+    needs: test
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Download a single artifact
+        # https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v3
+        id: download-artifact
+        with:
+          name: apache-spark-framework-artifact
+          path: build/libs
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEV_GITHUB_ACTION_ROLE }}
+          aws-region: us-west-2
+      - name: Copy files to the test website with the AWS CLI
+        run: |
+          ls -lrt ${{steps.download-artifact.outputs.download-path}}
+          aws s3 sync ${{steps.download-artifact.outputs.download-path}} ${{ vars.AWS_S3_PATH }}
+          aws s3 ls ${{ vars.AWS_S3_PATH }}
+          echo "🍏 This job's status is ${{ job.status }}."
